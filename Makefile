@@ -1,7 +1,7 @@
 SRC_DIR = ./src
 BUILD_DIR = ./build
 
-CROSS_COMPILE = /home/matsi/data/devel/dev-tools/angstrom-2011.03/arm/bin/arm-angstrom-linux-gnueabi-
+CROSS_COMPILE ?= arm-angstrom-linux-gnueabi-
 
 CC = $(CROSS_COMPILE)gcc
 LD = $(CROSS_COMPILE)ld
