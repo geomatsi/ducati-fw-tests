@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "common.h"
 
@@ -31,7 +32,8 @@ int main(void)
 	/* init trace buffer */
 
 	trace = (uint8_t *) 0xf7800;
-	memset(trace, 0x0, TRACE_SIZE);
+	memset((void *) trace, 0x0, TRACE_SIZE);
+
 	trace[0] = 'a';
 	trace[1] = 'b';
 	trace[2] = 'c';
