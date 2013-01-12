@@ -1,5 +1,6 @@
 #include "remoteproc.h"
 #include "common.h"
+#include "trace.h"
 
 void ResetISR(void);
 
@@ -57,9 +58,11 @@ struct fw_rsc_hdr trace = {
 	RSC_TRACE,
 };
 
+// FIXME: TRACE_ADDR = 0x100000 - TRACE_SIZE + 1
+
 __attribute__ ((section(".resource_table")))
 struct fw_rsc_trace trace_data = {
-	0xf7800, TRACE_SIZE, 0, "trace"
+	TRACE_ADDR, TRACE_SIZE, 0, "trace"
 };
 
 /* */

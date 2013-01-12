@@ -15,8 +15,8 @@ LDFLAGS = -Tcortex-m3.lds
 LIBGCC  = $(shell $(CC) -mthumb -mcpu=cortex-m3 -print-libgcc-file-name)
 
 # target: leds.out
-LEDS_SRCS = startup.c main.c stdlib.c
-LEDS_INCS = $(INC_DIR)/common.h $(INC_DIR)/remoteproc.h
+LEDS_SRCS = startup.c main.c stdlib.c trace.c
+LEDS_INCS = $(INC_DIR)/common.h $(INC_DIR)/remoteproc.h $(INC_DIR)/trace.h
 LEDS_OBJS = ${LEDS_SRCS:.c=.o}
 
 # list of targets
