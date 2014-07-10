@@ -9,8 +9,9 @@
 
 /* */
 
-#define TRACE_SIZE 10240
-#define TRACE_ADDR 0xf7800
+#define TRACE_SIZE  10240
+#define TRACE_ADDR  0xf7800
+#define TRACE_NAME  "trace"
 
 enum {
 	RUN_LOOP,

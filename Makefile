@@ -5,12 +5,13 @@
 SRC_DIR = ./src
 INC_DIR = ./include
 
-CROSS_COMPILE ?= arm-angstrom-linux-gnueabi-
+#CROSS_COMPILE = /home/matsi/devel/tools/CodeSourcery/Sourcery_CodeBench_for_ARM_GNU_Linux_2012.03-47/bin/arm-none-linux-gnueabi-
+CROSS_COMPILE = /home/matsi/devel/tools/CodeSourcery/2014.05-17-arm/bin/arm-none-eabi-
 
 CC = $(CROSS_COMPILE)gcc
 LD = $(CROSS_COMPILE)ld
 
-CFLAGS  = -g -mcpu=cortex-m3 -mthumb -I$(SRC_DIR) -I$(INC_DIR) -D GCC_ARMCM -O2 -Wall
+CFLAGS  = -g -mcpu=cortex-m3 -mthumb -I$(SRC_DIR) -I$(INC_DIR) -D GCC_ARMCM -O2 -Wall -fno-stack-protector -fno-unwind-tables -fno-exceptions
 LDFLAGS = -Tcortex-m3.lds
 LIBGCC  = $(shell $(CC) -mthumb -mcpu=cortex-m3 -print-libgcc-file-name)
 
