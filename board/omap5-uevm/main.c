@@ -5,7 +5,7 @@
 #include "common.h"
 #include "trace.h"
 
-#include "board.h"
+#include "omap5-uevm.h"
 
 int main(void)
 {

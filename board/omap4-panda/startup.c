@@ -2,7 +2,7 @@
 #include "common.h"
 #include "trace.h"
 
-#include "board.h"
+#include "omap4-panda.h"
 
 void ResetISR(void);
 

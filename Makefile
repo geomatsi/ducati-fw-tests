@@ -2,37 +2,63 @@
 #
 #
 
-SRC_DIR = ./src
-INC_DIR = ./include
+APPLICATION_INCLUDE_DIR = include
+BUILD_DIR = build
 
-#CROSS_COMPILE = /home/matsi/devel/tools/CodeSourcery/Sourcery_CodeBench_for_ARM_GNU_Linux_2012.03-47/bin/arm-none-linux-gnueabi-
-CROSS_COMPILE = /home/matsi/devel/tools/CodeSourcery/2014.05-17-arm/bin/arm-none-eabi-
+CROSS_COMPILE = arm-none-linux-gnueabi-
 
 CC = $(CROSS_COMPILE)gcc
 LD = $(CROSS_COMPILE)ld
 
-CFLAGS  = -g -mcpu=cortex-m3 -mthumb -I$(SRC_DIR) -I$(INC_DIR) -D GCC_ARMCM -O2 -Wall -fno-stack-protector -fno-unwind-tables -fno-exceptions
+CFLAGS = -mthumb -mcpu=cortex-m3 -D GCC_ARMCM  -O2 -fno-stack-protector -fno-unwind-tables -fno-exceptions
+
+CFLAGS += \
+	-I$(APPLICATION_INCLUDE_DIR) \
+
 LDFLAGS = -Tcortex-m3.lds
-LIBGCC  = $(shell $(CC) -mthumb -mcpu=cortex-m3 -print-libgcc-file-name)
+LIBGCC=$(shell $(CC) -mthumb -mcpu=cortex-m3 -print-libgcc-file-name)
 
-# target: leds.out
-LEDS_SRCS = startup.c main.c stdlib.c trace.c
-LEDS_INCS = $(INC_DIR)/common.h $(INC_DIR)/remoteproc.h $(INC_DIR)/trace.h
-LEDS_OBJS = ${LEDS_SRCS:.c=.o}
+APPLICATION_SOURCE_DIRS = \
+	src
 
-# list of targets
-TARGETS = leds.out
+VPATH = $(APPLICATION_SOURCE_DIRS)
 
-# rules
-all: $(TARGETS)
+COMMON_OBJS = \
+	$(BUILD_DIR)/trace.o \
+	$(BUILD_DIR)/stdlib.o
 
-leds.out: $(LEDS_OBJS) $(LEDS_INCS) $(LIBGCC) cortex-m3.lds
-	$(LD) $(LDFLAGS) $(LEDS_OBJS) $(LIBGCC) -o $@
+OMAP5_UEVM_OBJS = \
+	$(BUILD_DIR)/omap5-uevm/startup.o \
+	$(BUILD_DIR)/omap5-uevm/main.o
 
-%.o: $(SRC_DIR)/%.c
-	$(CC) -c $(CFLAGS) -o $@ $<
+OMAP4_PANDA_OBJS = \
+	$(BUILD_DIR)/omap4-panda/startup.o \
+	$(BUILD_DIR)/omap4-panda/main.o
+
+all: $(BUILD_DIR) omap5-uevm omap4-panda
+
+omap5-uevm: $(OMAP5_UEVM_OBJS) $(COMMON_OBJS) cortex-m3.lds
+	$(LD) $(LDFLAGS) $(COMMON_OBJS) $(OMAP5_UEVM_OBJS) -o leds.omap5-uevm.out
+
+omap4-panda: $(OMAP4_PANDA_OBJS) $(COMMON_OBJS) cortex-m3.lds
+	$(LD) $(LDFLAGS) $(COMMON_OBJS) $(OMAP4_PANDA_OBJS) -o leds.omap4-panda.out
+
+$(BUILD_DIR):
+	mkdir $(BUILD_DIR)
+	mkdir $(BUILD_DIR)/omap5-uevm
+	mkdir $(BUILD_DIR)/omap4-panda
+
+$(BUILD_DIR)/%.o: %.c
+	$(CC) $(CFLAGS) -o $@ -c $<
+
+$(BUILD_DIR)/omap5-uevm/%.o: board/omap5-uevm/%.c
+	$(CC) $(CFLAGS) -o $@ -c $<
+
+$(BUILD_DIR)/omap4-panda/%.o: board/omap4-panda/%.c
+	$(CC) $(CFLAGS) -o $@ -c $<
 
 clean:
-	rm -f *.o $(TARGETS)
+	rm -rf $(BUILD_DIR)
+	rm -f leds.*.out
 
 .PHONY: clean
