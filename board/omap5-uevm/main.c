@@ -21,14 +21,6 @@ int main(void)
 	GPIO_OE = (uint32_t *) IPU_GPIO_OE;
     PID_REG = (uint32_t *) IPU_PID_REG;
 
-    reset_bit(GPIO_OE, 25);
-    reset_bit(GPIO_DATAOUT, 25);
-
-	for(j = 0; j < 6; j++) {
-		for( i = 0; i < 500000; i++ );
-        toggle_bit(GPIO_DATAOUT, 25);
-	}
-
     /* if we are core1, go to sleep */
 
     if (read32(PID_REG) != 0) {
@@ -42,10 +34,13 @@ int main(void)
 
 	/* main */
 
+    reset_bit(GPIO_OE, 25);
+    reset_bit(GPIO_DATAOUT, 25);
+
 	j = 0;
 
 	while( 1 ) {
-		for(i = 0; i < 50000; i++);
+		for(i = 0; i < 500000; i++);
         toggle_bit(GPIO_DATAOUT, 25);
 		trace_append("%d = %x\n", j, j);
 		j += 1;
