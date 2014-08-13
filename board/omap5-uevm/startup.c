@@ -172,15 +172,21 @@ void ResetISR(void)
 
 static void NmiISR(void)
 {
+	trace_append("NMI\n");
+
 	while(1) {}
 }
 
 static void FaultISR(void)
 {
+	trace_append("FAULT\n");
+
 	while(1) {}
 }
 
 static void DefaultISR(void)
 {
-	while(1) {}
+	trace_append("ISR\n");
+
+	while(1) { }
 }
